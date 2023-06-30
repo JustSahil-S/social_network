@@ -12,8 +12,8 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView
 
 def index(request):
-    posts = Post.objects.all()
-    paginator = Paginator(posts, 5)
+    posts = Post.objects.all().order_by('-dateTime')
+    paginator = Paginator(posts, 10)
     print (paginator.count)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -26,12 +26,12 @@ def index(request):
     })
     except: 
         return render(request, "network/index.html", {
-        "posts": page_obj,
+        "page_obj": page_obj,
     })
 def follow_page(request):
     users = User.objects.all().filter(followers = request.user)
     posts = Post.objects.all().filter(poster__in = users)
-    paginator = Paginator(posts, 5)
+    paginator = Paginator(posts, 10)
     print (paginator.count)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -112,7 +112,7 @@ def profile(request, user):
     count = following.count()
     print(count)
     posts = Post.objects.all().filter(poster=User.objects.get(username=user))
-    paginator = Paginator(posts, 5)
+    paginator = Paginator(posts, 10)
     print (paginator.count)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

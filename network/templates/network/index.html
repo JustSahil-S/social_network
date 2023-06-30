@@ -2,14 +2,16 @@
 {% load static %}
 
 {% block body %}
+{% if user.is_authenticated %}
 <form action="{% url 'posts' %}" method="post">
     {% csrf_token %}
     <h2 style="margin-left: 20px;"> Create Post </h2>
     <input type="text" name="post" style="margin-top: 10px; padding: 5px; display: block; margin-left: 20px; margin-right: 20px; border-radius: 5px; height: 135px; width: 98%;">
     <input type="submit" style="margin-left: 20px;" value="Post"> 
  </form>
+ {% endif %}
  <div class="feed">
-{% for post in page_obj reversed %}
+{% for post in page_obj %}
 <div style="margin-top: 10px; background-color: lightgray; padding: 5px; display: block; margin-left: 20px; margin-right: 20px; border-radius: 5px;" id="content{{post.id}}" > 
     <a href="profile/{{ post.poster }}">{{ post.poster }}</a>
     <p id="content-{{ post.id }}">{{ post.content }}</p>
@@ -22,12 +24,11 @@
     </form>
      <button id="edit-{{ post.id }}" class="EditButtonClass">Edit</button>
 {% endif %}
+{% endif %}
 {% if user in post.likes.all %}
     <button id="button-{{ post.id }}" class="LikeButton" style="background-color: rgb(33, 199, 33); border-width: 0px; outline: none;">👍 {{ post.likes.all|length }}</button> 
 {% else %}
     <button id="button-{{ post.id }}" class="LikeButton" style="background-color: white; border-width: 0px; outline: none;">👍 {{ post.likes.all|length }}</button> 
-{% endif %}
-{% else %}
 {% endif %}
     <p style="color: rgb(76, 76, 76); font-size: 10px;">{{ post.dateTime }}</p>
 </div>
@@ -35,22 +36,21 @@
 
 {% endfor %}
  </div>
- <div class="pagination">
-    <span>
+ <div class="pagination" style="display: block;">
+    <div style="display: block; margin-left: 20px;">
         {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+             <a href="?page={{ page_obj.previous_page_number }}">previous</a>
         {% endif %}
 
-        <span>
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
 
         {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
-    </span>
+    </div>
+
+    <div style="display: block; margin-left: 20px;">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </div>
 </div> 
 {% endblock %}
 

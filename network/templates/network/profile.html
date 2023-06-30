@@ -3,14 +3,16 @@
 {% block body %}
 <h1>{{ user.username }}</h1>
 {% if request.user in user.followers.all %}
-    <button id="follow-{{ user.username }}" class="FollowButton" style="background-color: rgb(33, 199, 33); border-width: 0px; outline: none;">Followers: {{ user.followers.all|length }}</button> 
+    <button id="followCounter-{{ user.username }}" class="FollowCounter" style="background-color: rgb(255, 255, 255); border-width: 0px; outline: none;">Followers: {{ user.followers.all|length }}</button> 
+    <button id="follow-{{ user.username }}" class="FollowButton" style="background-color: rgb(33, 199, 33); border-width: 0px; outline: none;">Following</button> 
 {% else %}
-    <button id="follow-{{ user.username }}" class="FollowButton" style="background-color: white; border-width: 0px; outline: none;">Followers: {{ user.followers.all|length }}</button> 
+    <button id="followCounter-{{ user.username }}" class="FollowCounter" style="background-color: white; border-width: 0px; outline: none;">Followers: {{ user.followers.all|length }}</button> 
+    <button id="follow-{{ user.username }}" class="FollowButton" style="background-color: white; border-width: 0px; outline: none;">Follow</button> 
 {% endif %}
     <p style="margin-left: 6px"> Following: {{ count }}</p>
-{% for post in page_obj reversed %}
+{% for post in page_obj %}
 <div style="margin-top: 10px; background-color: lightgray; padding: 5px; display: block; margin-left: 20px; margin-right: 20px; border-radius: 5px;" id="content{{post.id}}" > 
-    <a href="profile/{{ post.poster }}">{{ post.poster }}</a>
+    <a>{{ post.poster }}</a>
     <p id="content-{{ post.id }}">{{ post.content }}</p>
 {% if user.is_authenticated %}
 {% if request.user == post.poster %}
@@ -34,22 +36,21 @@
 
 {% endfor %}
  </div>
- <div class="pagination">
-    <span>
+ <div class="pagination" style="display: block;">
+    <div style="display: block; margin-left: 20px;">
         {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+             <a href="?page={{ page_obj.previous_page_number }}">previous</a>
         {% endif %}
 
-        <span>
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
 
         {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
-    </span>
+    </div>
+
+    <div style="display: block; margin-left: 20px;">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </div>
 </div> 
 {% endblock %}
 

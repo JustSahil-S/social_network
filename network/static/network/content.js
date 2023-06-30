@@ -15,8 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const followButton = document.querySelector('.FollowButton');
     if (followButton) {
-        followButton.addEventListener("click", () => FollowCounter(followButton.id));
-    }
+        followButton.addEventListener("click", () => FollowCounter(followButton.id));}
       
       
 });
@@ -38,11 +37,15 @@ function FollowCounter(id) {
     var id_short = id.split('-')[1];
     fetch(`/follow/${id_short}`).then(response => response.json()).then(x => {
         var y = document.getElementById(id);
-        (y.innerHTML = ` Followers: ${x["followcount"]}`)
+        (document.getElementById(`followCounter-${id_short}`).innerHTML = ` Followers: ${x["followcount"]}`)
         if (y.style.backgroundColor == "white"){
             y.style.backgroundColor = "rgb(33, 199, 33)";
+            y.innerHTML="Following"
+
         } else {
             y.style.backgroundColor = "white";
+            y.innerHTML="Follow"
+
         }
     })
 };
@@ -78,7 +81,7 @@ function displayForm(id) {
     }
 }
 
-function FollowCounter(id) {
+/* function FollowCounter(id) {
     var id_short = id.split('-')[1];
     fetch(`/follow/${id_short}`).then(response => response.json()).then(x => {
         var y = document.getElementById(id);
@@ -89,4 +92,4 @@ function FollowCounter(id) {
             y.style.backgroundColor = "white";
         }
     })
-};
+}; */
